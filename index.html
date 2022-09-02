@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Info</title>
+</head>
+<body>
+    <h1>Finding Video Duration</h1>
+    <form>
+        <div>
+            <input type="file" accept="video/*" required/>
+        </div>
+        <button type="submit">fetch duration</button>
+    </form>
+    <h3 id="display"></h3>
+
+    <script>
+    const electron = require("electron")
+    const { ipcRenderer } = electron
+
+    document.querySelector("form").addEventListener("submit", (event)=>{
+        event.preventDefault()
+        const { path } =  document.querySelector("input").files[0]
+        ipcRenderer.send("input:from", path)
+    })
+
+    ipcRenderer.on("output:to", ( event, videoDuration ) => {
+        document.querySelector("#display").textContent = `selected video is ${videoDuration} seconds.`
+    })
+</script>
+</body>
+</html>
